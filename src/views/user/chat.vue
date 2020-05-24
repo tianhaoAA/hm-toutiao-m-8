@@ -1,5 +1,5 @@
 <template>
-  <div>小智</div>
+    <van-nav-bar title="小智同学" left-arrow  @click-left="$router.go(-1)"></van-nav-bar>
 </template>
 
 <script>

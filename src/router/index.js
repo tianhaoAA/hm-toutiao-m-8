@@ -61,7 +61,7 @@ const routes = [
     path: '/search/result',
     component: result
   }, {
-    path: 'article',
+    path: '/article',
     component: article
   }
 ]

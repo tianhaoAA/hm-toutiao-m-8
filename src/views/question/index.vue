@@ -1,5 +1,18 @@
 <template>
-  <div>问答模块</div>
+  <div>
+
+  <div class="spilt"></div>
+   <van-skeleton title avatar :row="3" />
+
+  <div class="spilt"></div>
+   <van-skeleton title avatar :row="3" />
+
+  <div class="spilt"></div>
+   <van-skeleton title avatar :row="3" />
+
+  <div class="spilt"></div>
+   <van-skeleton title avatar :row="3" />
+  </div>
 </template>
 
 <script>

@@ -5,6 +5,7 @@ import store from './store'
 import vant from 'vant'
 import 'vant/lib/index.css'
 import 'amfe-flexible'
+import './styles/index.css' // 引入全局的自定义样式  因为要覆盖vant的样式
 Vue.use(vant)
 
 Vue.config.productionTip = false

@@ -9,7 +9,7 @@ const USER_TOKEN = 'heima-toutiao-8'
 export function setUser (user) {
   // user 是一个对象
   // 对象转换成字符串
-  window.localStorage.setItem(USER_TOKEN, JSON.parse(user))
+  window.localStorage.setItem(USER_TOKEN, JSON.stringify(user))
 }
 
 // 获取用户的token 信息

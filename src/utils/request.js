@@ -17,7 +17,7 @@ const instance = aixos.create({
   // 基础的请求地址
   baseURL: 'http://ttapi.research.itcast.cn/app/v1_0',
   // 此函数是后台相应回来 但是还没有进到axios 的响应拦截器时执行 数组中可以写多个实例
-  transformRequest: [function (data) {
+  transformResponse: [function (data) {
     //  data 就是后端相应回来的字符串
     return data ? JSONBigint.parse(data) : {}
   }]

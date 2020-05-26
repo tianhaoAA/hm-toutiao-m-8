@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import { login } from '@/api/user'
+import { mapMutations } from 'vuex'
 export default {
   data () {
     return {
@@ -35,6 +37,8 @@ export default {
     }
   },
   methods: {
+    // 把vuex中的方法调用
+    ...mapMutations(['updateUser']),
     // 手机号的验证方法
     checkMobie () {
       if (!this.loginForm.mobile) {
@@ -62,14 +66,27 @@ export default {
       this.errorMessage.code = ''
       return true
     },
-    login () {
+    async login () {
     //  登录校验
     // 这两个方法都通过的话
-      if (this.checkMobie() && this.checkCode()) {
-        console.log(11)
+      try {
+        if (this.checkMobie() && this.checkCode()) {
+        // console.log(11)
+          const res = await login(this.loginForm)
+          console.log(res)
+          // 拿到token 之后 应该把 token设置vuex 中的state中
+          // 相当于更新当前的token 和 refresh_token
+          this.updateUser({
+            user: res
+          })
+          // 1 判断是否有需要跳转的页面 如果有 就跳转 如果没有 不用管 直接跳到主页
+          const { redrectUrl } = this.$route.query
+          this.$router.push(redrectUrl || '/')
+        }
+      } catch (error) {
+        this.$notify({ message: '用户名或者验证码错误', duration: 800 })
       }
     }
-
   }
 }
 </script>

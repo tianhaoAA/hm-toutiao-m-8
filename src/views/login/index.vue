@@ -70,7 +70,9 @@ export default {
     //  登录校验
     // 这两个方法都通过的话
       try {
-        if (this.checkMobie() && this.checkCode()) {
+        const validateMobie = this.checkMobie()
+        const validateCode = this.checkCode()
+        if (validateMobie && validateCode) {
         // console.log(11)
           const res = await login(this.loginForm)
           console.log(res)
@@ -84,7 +86,7 @@ export default {
           this.$router.push(redrectUrl || '/')
         }
       } catch (error) {
-        this.$notify({ message: '用户名或者验证码错误', duration: 800 })
+        this.$hnotify({ message: '用户名或者验证码错误' })
       }
     }
   }

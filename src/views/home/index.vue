@@ -18,7 +18,7 @@
 </span>
 <!-- 放置一个弹层组件 -->
 <van-popup v-model="show" style="width:80%">
-  <MoreAction @deslike='deslike'></MoreAction>
+  <MoreAction @deslike="deslijeOrReport('deslike')" @report="deslijeOrReport('report',$event)"></MoreAction>
 </van-popup>
   </div>
 </template>
@@ -28,8 +28,9 @@
 import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
 import { getMyChannels } from '@/api/channels'
-import { dislikeArticle } from '@/api/articles'
+import { dislikeArticle, reportArticle } from '@/api/articles'
 import eventBus from '@/utils/eventbus'
+
 export default {
   name: 'Home',
   data () {
@@ -48,13 +49,14 @@ export default {
 
   },
   methods: {
-    // 点击不感兴趣的时候触发的方法
-    async   deslike () {
+    async  deslijeOrReport (deslikeorreport, type) {
       try {
-        await dislikeArticle({
+        deslikeorreport === 'deslike' ? await dislikeArticle({
           target: this.articleId
+        }) : await reportArticle({
+          target: this.articleId,
+          type
         })
-        // 可以传递  文章id 还有 频道id  删除对应的频道id
         eventBus.$emit('delArticle', this.articleId, this.channels[this.activeIndex].id)
         this.show = false
         this.$hnotify({ type: 'success', message: '操作成功' })
@@ -63,6 +65,36 @@ export default {
         this.$hnotify({ message: '操作失败' })
       }
     },
+
+    // async  report (type) {
+    //   try {
+    //     // 点击举报的时候触发
+    //     await reportArticle({
+    //       target: this.articleId,
+    //       type
+    //     })
+    //     this.$hnotify({ type: 'success', message: '举报成功' })
+    //     eventBus.$emit('delArticle', this.articleId, this.channels[this.activeIndex].id)
+    //     this.show = false
+    //   } catch (error) {
+    //     this.$hnotify({ message: '举报失败' })
+    //   }
+    // },
+    // // 点击不感兴趣的时候触发的方法
+    // async   deslike () {
+    //   try {
+    //     await dislikeArticle({
+    //       target: this.articleId
+    //     })
+    //     // 可以传递  文章id 还有 频道id  删除对应的频道id
+    //     eventBus.$emit('delArticle', this.articleId, this.channels[this.activeIndex].id)
+    //     this.show = false
+    //     this.$hnotify({ type: 'success', message: '操作成功' })
+    //   } catch (error) {
+    //     // 默认是红色的
+    //     this.$hnotify({ message: '操作失败' })
+    //   }
+    // },
     async   getMyChannels () {
       const res = await getMyChannels()
       this.channels = res.channels

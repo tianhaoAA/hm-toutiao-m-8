@@ -98,18 +98,39 @@ export default {
       }
       console.log(res)
     },
-    onRefresh () {
+    async   onRefresh () {
       console.log('下拉刷新')
 
-      setTimeout(() => {
-        const arr = Array.from(
-          Array(2),
-          (value, index) => '追加' + (index + 1)
-        )
-        this.artcles.unshift(...arr)
-        this.downLoading = false
-        this.successText = `更新了${arr.length}条数据`
-      }, 1000)
+      // setTimeout(() => {
+      //   const arr = Array.from(
+      //     Array(2),
+      //     (value, index) => '追加' + (index + 1)
+      //   )
+      //   this.artcles.unshift(...arr)
+      //   this.downLoading = false
+      //   this.successText = `更新了${arr.length}条数据`
+      // }, 1000)
+      const res = getArticles({
+        channel_id: await this.channel_id,
+        // 传递最新的历史时间戳
+        timestamp: Date.now()
+      })
+      // 手动的关闭下拉的状态
+      this.downLoading = false
+      // 判断返回的数组是否存在
+      if (res.results.length) {
+        // 把返回的数组替换原来的数组
+        this.artcles = res.results
+        // 判断返回的数据有没有历史时间戳
+        if (res.pre_timestamp) {
+        //  存在时候 应该可能上拉加载数据到了队尾 这个时候需要打开列表
+          this.finished = false
+          // 把返回的历史时间戳 赋值给现在的实际戳
+        }
+        this.successText = `更新了${res.results.length}条数据`
+      } else {
+        this.successText = '当前己经是最新的数据了'
+      }
     }
   }
 }

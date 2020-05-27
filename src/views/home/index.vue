@@ -3,7 +3,7 @@
     <!-- 放置tabs组件 -->
 <van-tabs>
   <!-- 内部需要放置 标签 title是当期显示的内容 -->
- <van-tab  v-for="item in 10" :key="item" :title="`标签${item}`">
+ <van-tab  v-for="item in channels" :key="item.id" :title="item.name">
 <div class="scroll-wrapper">
    <!-- <van-cell-group>
    <van-cell title="标题" value="内容" v-for="item in 20" :key="item"></van-cell>
@@ -23,10 +23,27 @@
 <script>
 // @ is an alias to /src
 import ArticleList from './components/article-list'
+import { getMyChannels } from '@/api/channels'
 export default {
   name: 'Home',
+  data () {
+    return {
+      //   专门接受频道数据
+      channels: []
+    }
+  },
   components: {
     ArticleList
+
+  },
+  methods: {
+    async   getMyChannels () {
+      const res = await getMyChannels()
+      this.channels = res.channels
+    }
+  },
+  created () {
+    this.getMyChannels()
   }
 }
 </script>

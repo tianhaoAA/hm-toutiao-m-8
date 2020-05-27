@@ -28,6 +28,7 @@
 </template>
 
 <script>
+
 export default {
   data () {
     return {
@@ -39,6 +40,7 @@ export default {
       successText: '',
       //   下拉刷新
       downLoading: false
+
     }
   },
   methods: {

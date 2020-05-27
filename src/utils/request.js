@@ -57,7 +57,7 @@ instance.interceptors.response.use(function (response) {
       path: '/login',
       query: {
         //   需要传递的query参数 返回登录页 并把当前的地址传递出去
-        redrectUrl: router.currentRouter.fullPath
+        redrectUrl: router.currentRoute.fullPath
       }
     }
     if (store.state.user.refrsh_token) {

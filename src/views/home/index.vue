@@ -5,9 +5,10 @@
   <!-- 内部需要放置 标签 title是当期显示的内容 -->
  <van-tab  v-for="item in 10" :key="item" :title="`标签${item}`">
 <div class="scroll-wrapper">
-   <van-cell-group>
+   <!-- <van-cell-group>
    <van-cell title="标题" value="内容" v-for="item in 20" :key="item"></van-cell>
- </van-cell-group>
+ </van-cell-group> -->
+ <ArticleList></ArticleList>
 </div>
 </van-tab>
 </van-tabs>
@@ -21,11 +22,11 @@
 
 <script>
 // @ is an alias to /src
-
+import ArticleList from './components/article-list'
 export default {
   name: 'Home',
   components: {
-
+    ArticleList
   }
 }
 </script>

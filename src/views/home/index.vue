@@ -35,7 +35,8 @@ export default {
       //   专门接受频道数据
       channels: [],
       // 是否显示弹层
-      show: false
+      show: false,
+      articleId: null
     }
   },
   components: {
@@ -47,8 +48,10 @@ export default {
       const res = await getMyChannels()
       this.channels = res.channels
     },
-    showAction () {
+    showAction (id) {
       this.show = true
+      // 把文章id 存储起来
+      this.articleId = id
     }
   },
   created () {

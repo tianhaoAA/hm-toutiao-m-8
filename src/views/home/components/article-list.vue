@@ -24,7 +24,7 @@
                 <span>{{ item.comm_count }}评论</span>
                 <span>{{ item.pubdate |relTime}}</span>
                 <!-- 此叉号的显示 应该根据当前登录状态来判断 如果登录了就显示 没有登录就不显示 -->
-                <span class="close" v-if="user.token" @click="$emit('showAction')">
+                <span class="close" v-if="user.token" @click="$emit('showAction',item.art_id.toString())">
                   <van-icon name="cross" ></van-icon>
                 </span>
               </div>

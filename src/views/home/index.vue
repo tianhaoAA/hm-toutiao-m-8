@@ -13,13 +13,17 @@
 </van-tab>
 </van-tabs>
 <!-- 在tabs下放置图标 编辑频道的图标  -->
-<span class="bar_btn">
+<span class="bar_btn" @click="showChnnelsEdit=true">
   <van-icon name="wap-nav"></van-icon>
 </span>
 <!-- 放置一个弹层组件 -->
 <van-popup v-model="show" style="width:80%">
   <MoreAction @deslike="deslijeOrReport('deslike')" @report="deslijeOrReport('report',$event)"></MoreAction>
 </van-popup>
+<!-- 频道编辑组件 -->
+<van-action-sheet :round='false' v-model="showChnnelsEdit" title="编辑频道">
+ <ChannelEdit ></ChannelEdit>
+</van-action-sheet>
   </div>
 </template>
 
@@ -30,11 +34,13 @@ import MoreAction from './components/more-action'
 import { getMyChannels } from '@/api/channels'
 import { dislikeArticle, reportArticle } from '@/api/articles'
 import eventBus from '@/utils/eventbus'
-
+import ChannelEdit from './components/channel-edit'
 export default {
   name: 'Home',
   data () {
     return {
+      // 是否显示编辑组件
+      showChnnelsEdit: false,
       //   专门接受频道数据
       channels: [],
       // 是否显示弹层
@@ -45,7 +51,7 @@ export default {
     }
   },
   components: {
-    ArticleList, MoreAction
+    ArticleList, MoreAction, ChannelEdit
 
   },
   methods: {
@@ -111,6 +117,17 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.van-action-sheet {
+  max-height: 100%;
+  height: 100%;
+  .van-action-sheet__header {
+    background: #3296fa;
+    color: #fff;
+    .van-icon-close {
+      color: #fff;
+    }
+  }
+}
 .van-tabs {
   height: 100%;
   display: flex;

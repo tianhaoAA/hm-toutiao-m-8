@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import vant from 'vant'
+import vant, { Lazyload } from 'vant'
 import '@/permission'
 import 'vant/lib/index.less'
 import 'amfe-flexible'
@@ -11,6 +11,7 @@ import './styles/index.css' // 引入全局的自定义样式  因为要覆盖va
 import plugin from '@/utils/plugin'
 Vue.use(vant)
 Vue.use(plugin)
+Vue.use(Lazyload)
 Vue.config.productionTip = false
 
 new Vue({

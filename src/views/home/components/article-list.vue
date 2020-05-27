@@ -78,6 +78,7 @@ export default {
       //   this.artcles.push(...arr)
       //   this.upLoading = false
       // }
+      await this.$sleep(200)
       const res = await getArticles({
         channel_id: this.channel_id,
         // 如果有历史的时间戳 用历史的 没有的话用当前的

@@ -8,7 +8,7 @@
    <!-- <van-cell-group>
    <van-cell title="标题" value="内容" v-for="item in 20" :key="item"></van-cell>
  </van-cell-group> -->
- <ArticleList @showAction='showAction' :channel_id='item.id'></ArticleList>
+ <ArticleList  @showAction='showAction' :channel_id='item.id'></ArticleList>
 </div>
 </van-tab>
 </van-tabs>
@@ -18,7 +18,7 @@
 </span>
 <!-- 放置一个弹层组件 -->
 <van-popup v-model="show" style="width:80%">
-  <MoreAction></MoreAction>
+  <MoreAction @deslike='deslike'></MoreAction>
 </van-popup>
   </div>
 </template>
@@ -28,6 +28,7 @@
 import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
 import { getMyChannels } from '@/api/channels'
+import { dislikeArticle } from '@/api/articles'
 export default {
   name: 'Home',
   data () {
@@ -44,6 +45,18 @@ export default {
 
   },
   methods: {
+    // 点击不感兴趣的时候触发的方法
+    async   deslike () {
+      try {
+        await dislikeArticle({
+          target: this.articleId
+        })
+        this.$hnotify({ type: 'success', message: '操作成功' })
+      } catch (error) {
+        // 默认是红色的
+        this.$hnotify({ message: '操作失败' })
+      }
+    },
     async   getMyChannels () {
       const res = await getMyChannels()
       this.channels = res.channels

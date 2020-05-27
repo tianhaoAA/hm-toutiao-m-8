@@ -15,3 +15,17 @@ export function getArticles (params) {
     params: { with_top: 1, ...params }
   })
 }
+
+/*****
+ *
+ * 不喜欢文章的id
+ *
+ * ***/
+export function dislikeArticle (data) {
+  return request({
+    url: '/article/dislikes',
+    method: 'post',
+    // body 参数应该位于 data
+    data
+  })
+}

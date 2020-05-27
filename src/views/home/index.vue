@@ -8,7 +8,7 @@
    <!-- <van-cell-group>
    <van-cell title="标题" value="内容" v-for="item in 20" :key="item"></van-cell>
  </van-cell-group> -->
- <ArticleList :channel_id='item.id'></ArticleList>
+ <ArticleList @showAction='showAction' :channel_id='item.id'></ArticleList>
 </div>
 </van-tab>
 </van-tabs>
@@ -16,30 +16,39 @@
 <span class="bar_btn">
   <van-icon name="wap-nav"></van-icon>
 </span>
-
+<!-- 放置一个弹层组件 -->
+<van-popup v-model="show" style="width:80%">
+  <MoreAction></MoreAction>
+</van-popup>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import ArticleList from './components/article-list'
+import MoreAction from './components/more-action'
 import { getMyChannels } from '@/api/channels'
 export default {
   name: 'Home',
   data () {
     return {
       //   专门接受频道数据
-      channels: []
+      channels: [],
+      // 是否显示弹层
+      show: false
     }
   },
   components: {
-    ArticleList
+    ArticleList, MoreAction
 
   },
   methods: {
     async   getMyChannels () {
       const res = await getMyChannels()
       this.channels = res.channels
+    },
+    showAction () {
+      this.show = true
     }
   },
   created () {

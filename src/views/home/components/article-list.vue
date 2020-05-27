@@ -23,8 +23,9 @@
                 <span> {{ item.aut_name}} </span>
                 <span>{{ item.comm_count }}评论</span>
                 <span>{{ item.pubdate |relTime}}</span>
-                <span class="close">
-                  <van-icon name="cross"></van-icon>
+                <!-- 此叉号的显示 应该根据当前登录状态来判断 如果登录了就显示 没有登录就不显示 -->
+                <span class="close" v-if="user.token" @click="$emit('showAction')">
+                  <van-icon name="cross" ></van-icon>
                 </span>
               </div>
             </div>
@@ -37,6 +38,7 @@
 
 <script>
 import { getArticles } from '@/api/articles'
+import { mapState } from 'vuex'
 export default {
   props: {
     //  key( props属性名字) ：value (对象配置)
@@ -135,6 +137,9 @@ export default {
         this.successText = '当前己经是最新的数据了'
       }
     }
+  },
+  computed: {
+    ...mapState(['user'])
   }
 }
 </script>

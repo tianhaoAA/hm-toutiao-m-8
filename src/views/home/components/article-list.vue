@@ -21,8 +21,8 @@
               </div>
               <div class="info_box">
                 <span> {{ item.aut_name}} </span>
-                <span>{{ item.comm_count }}</span>
-                <span>{{ item.pubdate}}</span>
+                <span>{{ item.comm_count }}评论</span>
+                <span>{{ item.pubdate |relTime}}</span>
                 <span class="close">
                   <van-icon name="cross"></van-icon>
                 </span>
@@ -82,11 +82,11 @@ export default {
       const res = await getArticles({
         channel_id: this.channel_id,
         // 如果有历史的时间戳 用历史的 没有的话用当前的
-        timestamp: this.timestamp || Date.now()
+        timestamp: this.timestamp | Date.now()
       })
       // 获取内容 将内容加载到队尾
       this.artcles.push(...res.results)
-      console.log(res.results)
+      // console.log(res.results)
 
       // 关闭加载的状态
       this.upLoading = false
@@ -111,14 +111,16 @@ export default {
       //   this.downLoading = false
       //   this.successText = `更新了${arr.length}条数据`
       // }, 1000)
-      const res = getArticles({
-        channel_id: await this.channel_id,
+      const res = await getArticles({
+        channel_id: this.channel_id,
         // 传递最新的历史时间戳
         timestamp: Date.now()
       })
       // 手动的关闭下拉的状态
       this.downLoading = false
       // 判断返回的数组是否存在
+      console.log(res.results.length)
+
       if (res.results.length) {
         // 把返回的数组替换原来的数组
         this.artcles = res.results

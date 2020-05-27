@@ -22,7 +22,7 @@
 </van-popup>
 <!-- 频道编辑组件 -->
 <van-action-sheet :round='false' v-model="showChnnelsEdit" title="编辑频道">
- <ChannelEdit ></ChannelEdit>
+ <ChannelEdit :channels='channels'></ChannelEdit>
 </van-action-sheet>
   </div>
 </template>

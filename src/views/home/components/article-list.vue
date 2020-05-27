@@ -7,7 +7,7 @@
       <van-list v-model="upLoading" finished-text="没有更多数据了" :finished="finished" @load="onLiad">
         <!-- 循环内容 -->
         <van-cell-group>
-          <van-cell v-for="item in artcles" :key="item">
+          <van-cell v-for="item in artcles" :key="item.art_id">
             <!-- 三张图 -->
             <div class="article_item">
               <h3 class="van-ellipsis">2020年你好啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</h3>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-
+import { getArticles } from '@/api/articles'
 export default {
   props: {
     //  key( props属性名字) ：value (对象配置)
@@ -58,18 +58,37 @@ export default {
     }
   },
   methods: {
-    onLiad () {
+    async onLiad () {
       console.log('开始加载')
       //   setTimeout(() => {
       //     this.finished = true
       //   }, 1000)
-      if (this.artcles.length > 50) {
-        this.finished = true
+      // if (this.artcles.length > 50) {
+      //   this.finished = true
+      // } else {
+      //   const arr = Array.from(Array(10), (value, index) => index + 1)
+      //   this.artcles.push(...arr)
+      //   this.upLoading = false
+      // }
+      const res = await getArticles({
+        channel_id: this.channel_id,
+        // 如果有历史的时间戳 用历史的 没有的话用当前的
+        timestamp: this.timestamp || Date.now()
+      })
+      // 获取内容 将内容加载到队尾
+      this.artcles.push(res.results)
+      console.log(res.results)
+
+      // 关闭加载的状态
+      this.upLoading = false
+      // 判断当前有没有历史时间戳
+      if (res.pre_timestamp) {
+        // 把返回的历史时间戳 给当前的时间戳
+        this.timestamp = res.pre_timestamp
       } else {
-        const arr = Array.from(Array(10), (value, index) => index + 1)
-        this.artcles.push(...arr)
-        this.upLoading = false
+        this.finished = true
       }
+      console.log(res)
     },
     onRefresh () {
       console.log('下拉刷新')

@@ -30,6 +30,18 @@
 <script>
 
 export default {
+  props: {
+    //  key( props属性名字) ：value (对象配置)
+    channel_id: {
+      // 必须传入
+      required: true,
+      // 必须是数字类型
+      type: Number,
+      // default 是默认值
+      //  默认值的意思 假如你没有传入 prop属性 默认值 就会被采用
+      default: null
+    }
+  },
   data () {
     return {
       // 表示是否开启上拉加载 默认为false
@@ -39,8 +51,10 @@ export default {
       artcles: [],
       successText: '',
       //   下拉刷新
-      downLoading: false
+      downLoading: false,
 
+      // 时间戳
+      timestamp: null
     }
   },
   methods: {

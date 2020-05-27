@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- 放置tabs组件 -->
-<van-tabs>
+<van-tabs v-model="activeIndex">
   <!-- 内部需要放置 标签 title是当期显示的内容 -->
  <van-tab  v-for="item in channels" :key="item.id" :title="item.name">
 <div class="scroll-wrapper">
@@ -29,6 +29,7 @@ import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
 import { getMyChannels } from '@/api/channels'
 import { dislikeArticle } from '@/api/articles'
+import eventBus from '@/utils/eventbus'
 export default {
   name: 'Home',
   data () {
@@ -37,7 +38,9 @@ export default {
       channels: [],
       // 是否显示弹层
       show: false,
-      articleId: null
+      articleId: null,
+      // 当前默认激活的页签
+      activeIndex: 0
     }
   },
   components: {
@@ -51,6 +54,9 @@ export default {
         await dislikeArticle({
           target: this.articleId
         })
+        // 可以传递  文章id 还有 频道id  删除对应的频道id
+        eventBus.$emit('delArticle', this.articleId, this.channels[this.activeIndex].id)
+        this.show = false
         this.$hnotify({ type: 'success', message: '操作成功' })
       } catch (error) {
         // 默认是红色的

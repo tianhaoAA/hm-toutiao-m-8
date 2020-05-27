@@ -27,6 +27,9 @@ export default {
     return {
       isReport: false
     }
+  },
+  created () {
+
   }
 
 }

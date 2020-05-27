@@ -39,6 +39,7 @@
 <script>
 import { getArticles } from '@/api/articles'
 import { mapState } from 'vuex'
+import eventBus from '@/utils/eventbus'
 export default {
   props: {
     //  key( props属性名字) ：value (对象配置)
@@ -140,6 +141,25 @@ export default {
   },
   computed: {
     ...mapState(['user'])
+  },
+  created () {
+    // 接收两个参数 一个是文章id 一个是频道的id
+    eventBus.$on('delArticle', (artId, channelId) => {
+      //  这里我们要判断一下 传递过来的频道id 等于现在的频道id
+      if (channelId === this.channel_id) {
+        // 删除当前频道id的数据
+        const index = this.artcles.findIndex(item => item.art_id.toString() === artId)
+        if (index > -1) {
+          // 因为下标从0开始
+          this.artcles.splice(index, 1)
+        }
+        // 如果一直删除的话 不能加载数据 从新执行一下下拉刷新
+        if (this.artcles.length === 0) {
+          // 手动触发onLiad 事件
+          this.onLiad()
+        }
+      }
+    })
   }
 }
 </script>

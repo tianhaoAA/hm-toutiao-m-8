@@ -22,7 +22,7 @@
 </van-popup>
 <!-- 频道编辑组件 -->
 <van-action-sheet :round='false' v-model="showChnnelsEdit" title="编辑频道">
- <ChannelEdit :channels='channels'></ChannelEdit>
+ <ChannelEdit @selectChannel='selectChannel'  :channels='channels'></ChannelEdit>
 </van-action-sheet>
   </div>
 </template>
@@ -55,6 +55,23 @@ export default {
 
   },
   methods: {
+    // // 当子组件触发selectChannel的时候触发
+    // selectChannel (id) {
+    //   // 找到对应的索引
+    //   const index = this.channels.findIndex(item => item.id === id)
+    //   // 将对应频道的索引 设置给当前激活的标签
+    //   this.activeIndex = index
+    //   // 关闭弹层
+    //   this.showChnnelsEdit = false
+    // },
+    selectChannel (index) {
+      // // 找到对应的索引
+      // const index = this.channels.findIndex(item => item.id === id)
+      // 将对应频道的索引 设置给当前激活的标签
+      this.activeIndex = index
+      // 关闭弹层
+      this.showChnnelsEdit = false
+    },
     async  deslijeOrReport (deslikeorreport, type) {
       try {
         deslikeorreport === 'deslike' ? await dislikeArticle({

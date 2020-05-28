@@ -22,7 +22,7 @@
 </van-popup>
 <!-- 频道编辑组件 -->
 <van-action-sheet :round='false' v-model="showChnnelsEdit" title="编辑频道">
- <ChannelEdit  :activeIndex='activeIndex' @selectChannel='selectChannel'  :channels='channels'></ChannelEdit>
+ <ChannelEdit  @delChannels='delChannels' :activeIndex='activeIndex' @selectChannel='selectChannel'  :channels='channels'></ChannelEdit>
 </van-action-sheet>
   </div>
 </template>
@@ -31,7 +31,7 @@
 // @ is an alias to /src
 import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
-import { getMyChannels } from '@/api/channels'
+import { getMyChannels, delChannels } from '@/api/channels'
 import { dislikeArticle, reportArticle } from '@/api/articles'
 import eventBus from '@/utils/eventbus'
 import ChannelEdit from './components/channel-edit'
@@ -55,6 +55,20 @@ export default {
 
   },
   methods: {
+    // 点击删除自身频道的方法
+    async  delChannels (id) {
+      try {
+        await delChannels(id)
+        const index = this.channels.findIndex(item => item.id === id)
+        this.channels.splice(index, 1)
+        if (index <= this.activeIndex) {
+          // 如果你删除的索引 是在当前激活索引小于等于当前的激活索引 给往前挪一位
+          this.activeIndex = this.activeIndex - 1
+        }
+      } catch (error) {
+        this.$hnotify({ message: '删除频道失败' })
+      }
+    },
     // // 当子组件触发selectChannel的时候触发
     // selectChannel (id) {
     //   // 找到对应的索引

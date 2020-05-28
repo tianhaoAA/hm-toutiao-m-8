@@ -74,12 +74,12 @@ export function delChannels (id) {
  *   添加频道的方法
  *     @param 传入频道对象
  * **/
-export function addChannels (channels) {
+export function addChannels (channel) {
   return new Promise(function (resolve, reject) {
     const key = store.state.user.token ? CACHE_CHANNEL_V : CACHE_CHANNEL_T
     const channels = JSON.parse(localStorage.getItem(key))
     // 将添加的频道数据添加到队尾
-    channels.push(channels)
+    channels.push(channel)
     // 重新写入缓存
     localStorage.setItem(key, JSON.stringify(channels))
     // 执行这一步 相当于 告诉我们使用promise的方法 执行成功

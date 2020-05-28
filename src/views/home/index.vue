@@ -22,7 +22,7 @@
 </van-popup>
 <!-- 频道编辑组件 -->
 <van-action-sheet :round='false' v-model="showChnnelsEdit" title="编辑频道">
- <ChannelEdit  @delChannels='delChannels' :activeIndex='activeIndex' @selectChannel='selectChannel'  :channels='channels'></ChannelEdit>
+ <ChannelEdit  @addChannels='addChannels' @delChannels='delChannels' :activeIndex='activeIndex' @selectChannel='selectChannel'  :channels='channels'></ChannelEdit>
 </van-action-sheet>
   </div>
 </template>
@@ -31,7 +31,7 @@
 // @ is an alias to /src
 import ArticleList from './components/article-list'
 import MoreAction from './components/more-action'
-import { getMyChannels, delChannels } from '@/api/channels'
+import { getMyChannels, delChannels, addChannels } from '@/api/channels'
 import { dislikeArticle, reportArticle } from '@/api/articles'
 import eventBus from '@/utils/eventbus'
 import ChannelEdit from './components/channel-edit'
@@ -55,6 +55,13 @@ export default {
 
   },
   methods: {
+    // 添加频道的方法
+    async addChannels (channels) {
+      // alert(1)
+      await addChannels(channels)
+      this.channels.push(channels)
+      // this.$hnotify(message:'添加成功')
+    },
     // 点击删除自身频道的方法
     async  delChannels (id) {
       try {

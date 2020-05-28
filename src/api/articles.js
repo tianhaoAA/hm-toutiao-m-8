@@ -56,3 +56,15 @@ export function getSuggestion (params) {
     params
   })
 }
+
+/***
+ * 搜索文章的方法
+ *
+ * **/
+export function searchArticle (params) {
+  return request({
+    url: '/search',
+    // 关键词 及分页信息
+    params
+  })
+}

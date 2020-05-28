@@ -6,23 +6,23 @@
     <!-- 将 导航栏固定在顶部 -->
     <van-nav-bar fixed title="搜索结果" left-arrow @click-left="$router.back()"></van-nav-bar>
     <!-- 防止搜索结果列表 -->
-    <van-list>
+    <van-list v-model="upLoading" :finished="finished" @load='onLoad'>
       <van-cell-group>
-        <van-cell v-for="item in 20" :key="item">
+        <van-cell v-for="item in articles" :key="item.art_id.toString()">
           <div class="article_item">
-            <h3 class="van-ellipsis">我们守望相助,从正月初一到三月十五</h3>
-            <!-- <div class="img_box">
-              <van-image class="w33" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-              <van-image class="w33" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-              <van-image class="w33" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-            </div> -->
+            <h3 class="van-ellipsis">{{ item.title}}</h3>
             <div class="img_box">
-              <van-image class="w100" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+              <van-image class="w33" fit="cover" :src="item.cover.images[0]" />
+              <van-image class="w33" fit="cover" :src="item.cover.images[1]" />
+              <van-image class="w33" fit="cover" :src="item.cover.images[2]" />
+            </div>
+            <div class="img_box">
+              <van-image class="w100" fit="cover" :src="item.cover.images[0]" />
             </div>
             <div class="info_box">
-              <span>你像一阵风</span>
-              <span>8评论</span>
-              <span>10分钟前</span>
+              <span>{{ item.aut_name}}</span>
+              <span>{ item.comm_count} 评论</span>
+              <span>{{ item.pubdate |relTime}}</span>
             </div>
           </div>
         </van-cell>
@@ -32,8 +32,41 @@
 </template>
 
 <script>
+import { searchArticle } from '@/api/articles'
 export default {
-
+  data () {
+    return {
+      // 上啦加载状态
+      upLoading: false,
+      // 表示当前的加载是否全部完成 了 如果全部完成了 应该讲finished 设置为true
+      finished: false,
+      // 放置搜索结果文章的
+      articles: [],
+      page: {
+        // 当前第几页
+        page: 1,
+        // 每页多少条
+        per_page: 10
+      }
+    }
+  },
+  methods: {
+    async onLoad () {
+    // 加载数据
+      const { q } = this.$route.query
+      const res = await searchArticle({ ...this.page, q })
+      // 得到结果 应该加到article 中
+      this.articles.push(...res.results)
+      // 关闭上拉加载的状态
+      this.upLoading = false
+      // 如果 返回的数据 是0 的话 就没有下一页数据
+      if (res.results.length) {
+        this.page.page++
+      } else {
+        this.finished = true
+      }
+    }
+  }
 }
 </script>
 

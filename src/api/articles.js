@@ -44,3 +44,15 @@ export function reportArticle (data) {
     data
   })
 }
+
+/****
+ *
+ * 获取联想搜索建议
+ *
+ * **/
+export function getSuggestion (params) {
+  return request({
+    url: '/suggestion', // 搜搜建议地址
+    params
+  })
+}

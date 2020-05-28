@@ -45,3 +45,26 @@ export function getAllChannels () {
     url: '/channels'
   })
 }
+
+/*****
+ *
+ *    删除频道
+ * @param id 删除
+ * ***/
+export function delChannels (id) {
+  return new Promise(function (resolve, reject) {
+    // 有id 就可以从缓存中删除数据
+    const key = store.state.user.token ? CACHE_CHANNEL_V : CACHE_CHANNEL_T
+    const channels = JSON.parse(localStorage.getItem(key))
+    // channels = channels.filter(item => item.id !== id)
+    // localStorage.setItem(key, JSON.stringify(channels))
+    const index = channels.findIndex(item => item.id === id)
+    if (index > -1) {
+      channels.splice(index, 1)
+      localStorage.setItem(key, JSON.stringify(channels))
+      resolve()
+    } else {
+      reject(new Error('没有找到对应的频道'))
+    }
+  })
+}

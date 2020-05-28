@@ -10,14 +10,15 @@
       </van-cell>
     </van-cell-group>
     <div class="history-box" v-if="!q">
-      <div class="head" >
+      <div class="head"  v-if="historyList.length>0">
         <span>历史记录</span>
         <van-icon name="delete"></van-icon>
       </div>
       <van-cell-group>
-        <van-cell>
-          <a class="word_btn">电脑</a>
-          <van-icon class="close_btn" slot="right-icon" name="cross" />
+        <!-- 如果没有历史记录 就不去显示 -->
+        <van-cell v-for="(item,index) in historyList" :key="index">
+          <a class="word_btn">{{item}}</a>
+          <van-icon class="close_btn" @click="delHistory(index)" slot="right-icon" name="cross" />
         </van-cell>
       </van-cell-group>
     </div>
@@ -25,11 +26,26 @@
 </template>
 
 <script>
+const key = 'heima-8-history'
 export default {
   name: 'search',
   data () {
     return {
-      q: ''
+      // 关键词的数据
+      q: '',
+      // 接收历史搜索记录
+      historyList: []
+    }
+  },
+  created () {
+    this.historyList = JSON.parse(localStorage.getItem(key) || '[]')
+  },
+  methods: {
+    // 点击删除 删除历史记录
+    delHistory (index) {
+      // 删除对应的历史记录
+      this.historyList.splice(index, 1)
+      JSON.parse(localStorage.setItem(key, JSON.stringify(this.historyList)))
     }
   }
 }

@@ -19,6 +19,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp;
         <van-button round  :class="{active :article.attitude===0}" size="small" plain icon="delete">不喜欢</van-button>
       </div>
+      <Comment></Comment>
     </div>
     <!-- 遮罩层 -->
     <van-overlay :show="loading">
@@ -32,7 +33,11 @@
 <script>
 import { getArticleInfo } from '@/api/articles'
 import { followUser, unfollowUser } from '@/api/user'
+import Comment from './components/comment'
 export default {
+  components: {
+    Comment
+  },
   data () {
     return {
       article: {},
@@ -115,6 +120,7 @@ export default {
     position:sticky;
     background-color: #fff;
     top:46px;
+    z-index: 2;
     .text {
       flex: 1;
       padding-left: 10px;

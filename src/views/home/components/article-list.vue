@@ -7,7 +7,7 @@
       <van-list v-model="upLoading" finished-text="没有更多数据了" :finished="finished" @load="onLiad">
         <!-- 循环内容 -->
         <van-cell-group>
-          <van-cell v-for="item in artcles" :key="item.art_id.toString()">
+          <van-cell :to="`/article?artId=${item.art_id.toString()}`" v-for="item in artcles" :key="item.art_id.toString()">
             <!-- 三张图 -->
             <div class="article_item">
               <h3 class="van-ellipsis">{{ item.title}}</h3>
@@ -24,7 +24,7 @@
                 <span>{{ item.comm_count }}评论</span>
                 <span>{{ item.pubdate |relTime}}</span>
                 <!-- 此叉号的显示 应该根据当前登录状态来判断 如果登录了就显示 没有登录就不显示 -->
-                <span class="close" v-if="user.token" @click="$emit('showAction',item.art_id.toString())">
+                <span class="close" v-if="user.token" @click.stop="$emit('showAction',item.art_id.toString())">
                   <van-icon name="cross" ></van-icon>
                 </span>
               </div>

@@ -1,26 +1,26 @@
 <template>
   <div class="comment">
-    <van-list v-model="loading" :finished="finished" finished-text="没有更多了">
-      <div class="item van-hairline--bottom van-hairline--top" v-for="index in 5" :key="index">
+    <van-list @load='onLoad' v-model="loading" :finished="finished" finished-text="没有更多了">
+      <div class="item van-hairline--bottom van-hairline--top" v-for="item in comments" :key="item.com_id.toString()">
         <van-image
           round
           width="1rem"
           height="1rem"
           fit="fill"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          :src="item.aut_photo"
         />
         <div class="info">
           <p>
-            <span class="name">一阵清风</span>
+            <span class="name">{{ item.ant_name}}</span>
             <span style="float:right">
               <span class="van-icon van-icon-good-job-o zan"></span>
-              <span class="count">10</span>
+              <span class="count">{{ item.like_count}}</span>
             </span>
           </p>
-          <p>评论的内容，。。。。</p>
+          <p> {{ item.content}}</p>
           <p>
-            <span class="time">两天内</span>&nbsp;
-            <van-tag plain @click="showReply=true">4 回复</van-tag>
+            <span class="time">{{ item.pubdate| relTime}}</span>&nbsp;
+            <van-tag plain @click="showReply=true">{{item.reply_count}} 回复</van-tag>
           </p>
         </div>
       </div>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { getComments } from '@/api/articles'
 export default {
   data () {
     return {
@@ -47,8 +48,36 @@ export default {
       // 输入的内容
       value: '',
       // 控制提交中状态数据
-      submiting: false
+      submiting: false,
+      //   评论数据
+      comments: [],
+      // 偏移量 分页依据
+      offset: null
     }
+  },
+  methods: {
+    async onLoad () {
+    //   滚动条 距离底部超过一定距离就会触发
+      const { artId } = this.$route.query
+      const res = await getComments({
+      // a 文章评论 c 评论的评论
+        type: 'a',
+        source: artId,
+        offset: this.offset
+      })
+      this.comments.push(...res.results)
+      // 关闭加载的状态
+      this.loading = false
+      // 需要判断 是否还有下一页
+      // if (res.last_id === res.end_id) {
+      //   this.finished = true
+      // }
+      this.finished = res.end_id === res.last_id
+      if (!this.finished) {
+        this.offset = res.last_id
+      }
+    }
+
   }
 }
 </script>

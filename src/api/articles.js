@@ -79,3 +79,18 @@ export function getArticleInfo (artId) {
     url: `/articles/${artId}`
   })
 }
+
+/***
+ *
+ *  获取评论 或者评论回复
+ *
+ * ***/
+export function getComments (params) {
+  return request({
+    url: '/comments',
+    params
+    // type (是文章的回复， 还是回复的回复)
+    // source(来源于id)
+    // offset(偏移量 分页的依据) 查第二页的数据 传入第一页的最后一个id
+  })
+}

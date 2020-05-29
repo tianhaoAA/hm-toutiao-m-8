@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     async onLiad () {
-      console.log('开始加载')
+      // console.log('开始加载')
       //   setTimeout(() => {
       //     this.finished = true
       //   }, 1000)
@@ -100,10 +100,10 @@ export default {
       } else {
         this.finished = true
       }
-      console.log(res)
+      // console.log(res)
     },
     async   onRefresh () {
-      console.log('下拉刷新')
+      // console.log('下拉刷新')
 
       // setTimeout(() => {
       //   const arr = Array.from(

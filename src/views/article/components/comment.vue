@@ -20,7 +20,7 @@
           <p> {{ item.content}}</p>
           <p>
             <span class="time">{{ item.pubdate| relTime}}</span>&nbsp;
-            <van-tag plain @click="showReply=true">{{item.reply_count}} 回复</van-tag>
+            <van-tag plain @click="openReply">{{item.reply_count}} 回复</van-tag>
           </p>
         </div>
       </div>
@@ -31,6 +31,19 @@
         <span class="submit" v-else slot="button">提交</span>
       </van-field>
     </div>
+    <!-- 放置评论的回复面板 -->
+       <van-action-sheet v-model="showReply" :round="false" class="reply_dialog" title="回复评论">
+      <van-list v-model="reply.loading" :finished="reply.finished" finished-text="没有更多了">
+        <div class="item van-hairline--bottom van-hairline--top" v-for="index in 8" :key="index">
+          <van-image round width="1rem" height="1rem" fit="fill" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+          <div class="info">
+            <p><span class="name">一阵清风</span></p>
+            <p>评论的内容，。。。。</p>
+            <p><span class="time">两天内</span></p>
+          </div>
+        </div>
+      </van-list>
+    </van-action-sheet>
   </div>
 
   <!-- 都不输入框 -->
@@ -52,10 +65,25 @@ export default {
       //   评论数据
       comments: [],
       // 偏移量 分页依据
-      offset: null
+      offset: null,
+      showReply: false,
+      reply: {
+        //   此对象专门放置 面板加载信息
+        // 评论的评论加载状态
+        loading: false,
+        // 评论的加载状态
+        finished: false,
+        // 作为评论的评论的加载依据
+        offset: null,
+        // 加载评论的评论的加载数据
+        list: []
+      }
     }
   },
   methods: {
+    openReply () {
+      this.showReply = true
+    },
     async onLoad () {
     //   滚动条 距离底部超过一定距离就会触发
       const { artId } = this.$route.query
@@ -83,6 +111,25 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.reply_dialog {
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  .van-action-sheet__header {
+    background: #3296fa;
+    color: #fff;
+    .van-icon-close {
+      color: #fff;
+    }
+  }
+  .van-action-sheet__content{
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 10px 44px;
+  }
+}
 .comment {
   margin-top: 10px;
   /deep/ .item {

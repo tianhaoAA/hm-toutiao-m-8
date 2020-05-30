@@ -4,7 +4,7 @@
       <div class="info">
         <van-image round src="https://img.yzcdn.cn/vant/cat.jpeg" />
         <h3 class="name">
-          {{ userInfo.name}}
+          {{userInfo.name}}
           <br />
           <van-tag size="mini">申请认证</van-tag>
         </h3>
@@ -15,11 +15,11 @@
           <p>动态</p>
         </van-col>
         <van-col span="8">
-          <p>{{ userInfo.follow_count}}</p>
+          <p>{{userInfo.follow_count}}</p>
           <p>关注</p>
         </van-col>
         <van-col span="8">
-          <p>{{ userInfo.like_count }}</p>
+          <p>{{userInfo.like_count}}</p>
           <p>粉丝</p>
         </van-col>
       </van-row>

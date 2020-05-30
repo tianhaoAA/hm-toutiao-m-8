@@ -12,7 +12,7 @@
           src="https://img.yzcdn.cn/vant/cat.jpeg"
         />
       </van-cell>
-      <van-cell is-link title="名称" value="用户名称" />
+      <van-cell is-link title="名称" :value="user.name" @click="showName= true" />
       <van-cell is-link title="性别" value='男'/>
       <van-cell is-link title="生日" value="2019-08-08" />
     </van-cell-group>
@@ -25,18 +25,18 @@
        <van-cell is-link title="拍照"></van-cell>
     </van-popup>
     <van-action-sheet :actions="actions" v-model="showGender" cancel-text="取消"></van-action-sheet>
-
-     <!-- 弹昵称 -->
-    <van-popup v-model="showName" style="width:80%">
+    <!-- 弹昵称 -->
+    <van-popup  :close-on-click-overlay="false" v-model="showName" style="width:80%">
        <!-- 编辑用户昵称  双向绑定用户的昵称-->
-       <van-field  type='textarea'  rows="4"></van-field>
+       <van-field :error-message="nameMsg" v-model.trim="user.name" type='textarea'  rows="4"></van-field>
+  <van-button block type="info" @click="btnName" size="normal">确定</van-button>
     </van-popup>
  <van-popup v-model="showBirthDay" position="bottom">
       <!-- 选择出生日期  出生日期应该小于现在时间-->
       <!-- type表示 当前的日期类型 年月日 -->
       <van-datetime-picker
-        v-model="currentDate"
-        type="date"
+         v-model="currentDate"
+         type="date"
         :min-date="minDate"
         :max-date="maxDate"
          />
@@ -60,7 +60,30 @@ export default {
       actions: [{ name: '男' }, { name: '女' }],
       minDate: new Date(1900, 1, 1),
       maxDate: new Date(),
-      currentDate: new Date()
+      currentDate: new Date(),
+      user: {
+      // 放置个人资料
+      // 用户的昵称
+        name: '',
+        // 性别
+        gender: 1,
+        // 生日默认值
+        birthday: '',
+        // 用户的头像
+        photo: ''
+      },
+      //
+      nameMsg: ''
+    }
+  },
+  methods: {
+    btnName () {
+      if (this.user.name.length < 1 || this.user.name.length > 7) {
+        this.nameMsg = '昵称应该是1-7位的字符'
+        return
+      }
+
+      this.showName = false
     }
   }
 }

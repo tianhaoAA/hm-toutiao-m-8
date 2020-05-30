@@ -43,10 +43,19 @@ export function unfollowUser (id) {
   })
 }
 /*
-  获取用户的个人资料
+  获取用户的个人信息
 **/
 export function getUser () {
   return request({
     url: '/user'
+  })
+}
+
+/***
+ * 获取用户的资料
+ * **/
+export function getUserInfo () {
+  return request({
+    url: '/user/profile'
   })
 }

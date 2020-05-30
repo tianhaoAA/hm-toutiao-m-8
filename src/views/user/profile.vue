@@ -9,12 +9,12 @@
           height="1.5rem"
           fit="cover"
           round
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          :src="user.photo"
         />
       </van-cell>
       <van-cell is-link title="名称" :value="user.name" @click="showName= true" />
-      <van-cell is-link title="性别" value='男'/>
-      <van-cell is-link title="生日" value="2019-08-08" />
+      <van-cell is-link title="性别"  @click="showGender=true" :value="user.gender===0?'男':'女'"/>
+      <van-cell is-link title="生日" :value="user.birthday"  @click="showDate"/>
     </van-cell-group>
       <!-- 弹层组件 -->
     <van-popup v-model="showPhoto" style="width:80%">
@@ -24,7 +24,8 @@
        <van-cell is-link title="本地相册选择图片"></van-cell>
        <van-cell is-link title="拍照"></van-cell>
     </van-popup>
-    <van-action-sheet :actions="actions" v-model="showGender" cancel-text="取消"></van-action-sheet>
+    <!-- 性别 -->
+    <van-action-sheet @select="selectItem" :actions="actions" v-model="showGender" cancel-text="取消"></van-action-sheet>
     <!-- 弹昵称 -->
     <van-popup  :close-on-click-overlay="false" v-model="showName" style="width:80%">
        <!-- 编辑用户昵称  双向绑定用户的昵称-->
@@ -35,6 +36,8 @@
       <!-- 选择出生日期  出生日期应该小于现在时间-->
       <!-- type表示 当前的日期类型 年月日 -->
       <van-datetime-picker
+      @cancel='showBirthDay=false'
+      @confirm='confirmDate'
          v-model="currentDate"
          type="date"
         :min-date="minDate"
@@ -46,6 +49,8 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
+import { getUserInfo } from '@/api/user'
 export default {
   data () {
     return {
@@ -68,7 +73,7 @@ export default {
         // 性别
         gender: 1,
         // 生日默认值
-        birthday: '',
+        birthday: '1990-01-01',
         // 用户的头像
         photo: ''
       },
@@ -77,6 +82,7 @@ export default {
     }
   },
   methods: {
+    // 修改昵称触发
     btnName () {
       if (this.user.name.length < 1 || this.user.name.length > 7) {
         this.nameMsg = '昵称应该是1-7位的字符'
@@ -84,7 +90,30 @@ export default {
       }
 
       this.showName = false
+    },
+    // 当用户点击性别选项中触发
+    selectItem (item, index) {
+      this.user.gender = index
+      this.showGender = false
+    },
+    // 显示生日弹层
+    showDate () {
+      this.showBirthDay = true
+      this.currentDate = new Date(this.user.birthday)
+    },
+    // 确定生日时间
+    confirmDate () {
+      // this.
+      this.user.birthday = dayjs(this.currentDate).format('YYYY-MM-DD')
+      this.showBirthDay = false
+    },
+    async getUserInfo () {
+      const res = await getUserInfo(this.user)
+      this.user = res
     }
+  },
+  created () {
+    this.getUserInfo()
   }
 }
 </script>

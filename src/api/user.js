@@ -59,3 +59,15 @@ export function getUserInfo () {
     url: '/user/profile'
   })
 }
+
+/**
+ *
+ *  修改用户的头像
+ * **/
+export function upadtePhoto (data) {
+  return request({
+    url: '/user/photo',
+    method: 'patch',
+    data
+  })
+}

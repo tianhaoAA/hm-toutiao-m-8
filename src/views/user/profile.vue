@@ -10,6 +10,7 @@
           fit="cover"
           round
           :src="user.photo"
+           @click="showPhoto=true"
         />
       </van-cell>
       <van-cell is-link title="名称" :value="user.name" @click="showName= true" />
@@ -21,7 +22,7 @@
       <!-- 内容 -->
       <!-- 1 本地相册选择图片 -->
       <!-- 2 拍照 -->
-       <van-cell is-link title="本地相册选择图片"></van-cell>
+       <van-cell @click="opMyFile" is-link title="本地相册选择图片"></van-cell>
        <van-cell is-link title="拍照"></van-cell>
     </van-popup>
     <!-- 性别 -->
@@ -44,13 +45,14 @@
         :max-date="maxDate"
          />
     </van-popup>
+    <input @change="upload" ref="myfile" style="display:none" type='file'>
   </div>
 
 </template>
 
 <script>
 import dayjs from 'dayjs'
-import { getUserInfo } from '@/api/user'
+import { getUserInfo, upadtePhoto } from '@/api/user'
 export default {
   data () {
     return {
@@ -82,6 +84,17 @@ export default {
     }
   },
   methods: {
+    // 点击头像上传是触发
+    async upload (params) {
+      const data = new FormData()
+      data.append('photo', this.$refs.myfile.files[0])
+      const res = await upadtePhoto(data)
+      this.user.photo = res.photo
+      this.showPhoto = false
+    },
+    opMyFile () {
+      this.$refs.myfile.click()
+    },
     // 修改昵称触发
     btnName () {
       if (this.user.name.length < 1 || this.user.name.length > 7) {

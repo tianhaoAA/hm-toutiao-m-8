@@ -94,3 +94,15 @@ export function getComments (params) {
     // offset(偏移量 分页的依据) 查第二页的数据 传入第一页的最后一个id
   })
 }
+
+/**
+ *
+ *   评论的评论
+ * **/
+export function commentsOrReply (data) {
+  return request({
+    url: '/comments',
+    method: 'post',
+    data
+  })
+}

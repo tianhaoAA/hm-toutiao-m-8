@@ -28,11 +28,12 @@
     <div class="reply-container van-hairline--top">
       <van-field v-model="value" placeholder="写评论...">
         <van-loading v-if="submiting" slot="button" type="spinner" size="16px"></van-loading>
-        <span class="submit" v-else slot="button">提交</span>
+        <span class="submit" @click="submit" v-else slot="button">提交</span>
       </van-field>
     </div>
     <!-- 放置评论的回复面板 -->
-       <van-action-sheet v-model="showReply" :round="false" class="reply_dialog" title="回复评论">
+    <!-- 关闭面板 设置为空 -->
+       <van-action-sheet  @closed='reply.commentId=null' v-model="showReply" :round="false" class="reply_dialog" title="回复评论">
          <!-- 关闭 首次加载数据van-list 组 -->
       <van-list :immediate-check="false" v-model="reply.loading" :finished="reply.finished" finished-text="没有更多了">
         <div class="item van-hairline--bottom van-hairline--top" v-for="item in  reply.list" :key="item.com_id.toString()">
@@ -51,7 +52,7 @@
 </template>
 
 <script>
-import { getComments } from '@/api/articles'
+import { getComments, commentsOrReply } from '@/api/articles'
 export default {
   data () {
     return {
@@ -83,6 +84,57 @@ export default {
     }
   },
   methods: {
+    //   提交评论
+    async   submit () {
+    //   alert(1)
+    // 判断用户是否登录了  没有登录的话 去登录页面
+      if (this.$store.state.user.token) {
+        //    是否输入了评论内容 没有内容 直接返回
+        if (!this.value) return false
+        // 先把提交状态 打完 提交完之后在关闭 避免重复提交
+        this.submiting = true
+        await this.$sleep()
+        try {
+          // 调用接口 发送请求
+          const res = await commentsOrReply({
+            target: this.reply.commentId ? this.reply.commentId : this.$route.query.artId,
+            content: this.value,
+            //  如果是对评论进行评论 需要传递该评论属于哪个文章 如果是对文章进行id 则不需要传递
+            art_id: this.reply.commentId ? this.$route.query.artId : null
+          })
+          if (this.reply.commentId) {
+            //   存在的话 表示 对评论进行评论
+            this.reply.list.unshift(res.new_obj)
+            // 需要找到对应的评论 id 回复数加1
+            // 如果是对评论进行评论  需要找到 对应的评论id 将评论id的回复数+1
+            const comment = this.comments.find(item => item.com_id.toString() === this.reply.commentId)
+            comment && comment.reply_count++
+          } else {
+            //   对文章进行评论
+            this.comments.unshift(res.new_obj)
+          }
+        } catch (error) {
+          this.$hnotify({ message: '评论失败' })
+        }
+        // 关闭状态
+        this.submiting = false
+        this.value = ''
+      } else {
+        try {
+          await this.$dialog.confirm({
+            message: '如果想要去评论,您需要去登录'
+          })
+          this.$router.push({
+            path: '/login',
+            query: {
+              redrectUrl: this.$route.fullPath
+            }
+          })
+        } catch (error) {
+
+        }
+      }
+    },
     openReply (commentId) {
       this.showReply = true
       //   评论的的评论的id

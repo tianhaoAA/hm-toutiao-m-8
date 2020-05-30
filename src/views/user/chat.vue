@@ -1,16 +1,8 @@
 <template>
   <div class="container">
     <van-nav-bar fixed left-arrow @click-left="$router.back()" title="小智同学"></van-nav-bar>
-    <div class="chat-list">
-      <!-- <div class="chat-item " :class="{left:item.name==='xz',right:item.name!=='xz'}" v-for="(item,index) in list" :key="index">
-        <van-image  v-if="item.name==='xz'" fit="cover" round :src="XZImg" />
-        <div class="chat-pao">{{ item.msg}}</div>
-           <van-image v-if="item.name!=='xz'" fit="cover" round  :src="photo" />
-      </div>
-      <div class="chat-item right">
-        <div class="chat-pao">ewqewq</div>
-        <van-image  fit="cover" round :src="photo" />
-      </div> -->
+    <div class="chat-list" ref="mylist">
+
           <div class="chat-item" :class="{left: item.name === 'xz', right: item.name!=='xz'}" v-for="(item,index) in list" :key="index">
         <!-- 如果是小智说的 头像应该在左边 -->
         <van-image v-if="item.name==='xz'" fit="cover" round :src="XZImg" />
@@ -19,19 +11,6 @@
         <!-- 如果不等于小智 头像右边 -->
         <van-image v-if="item.name!=='xz'"  fit="cover" round :src="photo" />
       </div>
-
-  <!-- <van-nav-bar fixed left-arrow @click-left="$router.back()" title="小智同学"></van-nav-bar>
-    <div class="chat-list">
-      <div class="chat-item left">
-        <van-image fit="cover" round :src="XZImg" />
-        <div class="chat-pao">ewqewq</div>
-      </div>
-      <div class="chat-item right">
-        <div class="chat-pao">ewqewq</div>
-        <van-image  fit="cover" round  :src="photo" />
-      </div>
-
-      </div> -->
 
     </div>
     <div class="reply-container van-hairline--top">
@@ -47,6 +26,7 @@
 import XZImg from '@/assets/1jpg.jpg'
 import { mapState } from 'vuex'
 import io from 'socket.io-client'
+import Vue from 'vue'
 export default {
   data () {
     return {
@@ -78,9 +58,23 @@ export default {
     // 监听回复的消息
     this.socket.on('message', data => {
       this.list.push({ ...data, name: 'xz' })
+      this.scrollBottom()
     })
   },
   methods: {
+    // 将内容滚动底部 设置 滚动条的scrolltop(滚动条距离底部的长度) scrollHight
+    scrollBottom () {
+      // 此函数会在上一次更新 并且在页面渲染之后执行
+      // this.$nextTick(() => {
+      //   // 上一次数据更新已经渲染到页面上了
+      //   this.$refs.mylist.scrollTop = this.$refs.mylist.scrollHeight
+      // })
+      // 使用组件
+      Vue.nextTick(() => {
+        // 上一次数据更新已经渲染到页面上了
+        this.$refs.mylist.scrollTop = this.$refs.mylist.scrollHeight
+      })
+    },
     // 发送消息
     send () {
     //   console.log(1)
@@ -101,7 +95,13 @@ export default {
       this.list.push(obj)
       this.value = ''
       this.loading = false
+      this.scrollBottom()
     }
+  },
+  beforeDestroy () {
+    // 在实例销毁之前 把webeocket 链接给关闭
+    // ws.close() 原生    socket.io  close()
+    this.socket.close()
   }
 }
 </script>

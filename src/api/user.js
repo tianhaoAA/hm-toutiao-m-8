@@ -42,3 +42,11 @@ export function unfollowUser (id) {
     method: 'delete'
   })
 }
+/*
+  获取用户的个人资料
+**/
+export function getUser () {
+  return request({
+    url: '/user'
+  })
+}

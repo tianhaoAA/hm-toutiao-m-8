@@ -55,7 +55,7 @@ export default {
       const res = await getArticleInfo(artId)
       this.loading = false
       this.article = res
-      console.log(res)
+      // console.log(res)
     },
     async  follow () {
       // 调用 关注或者取消关注

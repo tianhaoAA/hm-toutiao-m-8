@@ -20,7 +20,7 @@
           <p> {{ item.content}}</p>
           <p>
             <span class="time">{{ item.pubdate| relTime}}</span>&nbsp;
-            <van-tag plain @click="openReply">{{item.reply_count}} 回复</van-tag>
+            <van-tag plain @click="openReply(item.com_id.toString())">{{item.reply_count}} 回复</van-tag>
           </p>
         </div>
       </div>
@@ -33,13 +33,14 @@
     </div>
     <!-- 放置评论的回复面板 -->
        <van-action-sheet v-model="showReply" :round="false" class="reply_dialog" title="回复评论">
-      <van-list v-model="reply.loading" :finished="reply.finished" finished-text="没有更多了">
-        <div class="item van-hairline--bottom van-hairline--top" v-for="index in 8" :key="index">
-          <van-image round width="1rem" height="1rem" fit="fill" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+         <!-- 关闭 首次加载数据van-list 组 -->
+      <van-list :immediate-check="false" v-model="reply.loading" :finished="reply.finished" finished-text="没有更多了">
+        <div class="item van-hairline--bottom van-hairline--top" v-for="item in  reply.list" :key="item.com_id.toString()">
+          <van-image round width="1rem" height="1rem" fit="fill" :src="item.aut_photo" />
           <div class="info">
-            <p><span class="name">一阵清风</span></p>
-            <p>评论的内容，。。。。</p>
-            <p><span class="time">两天内</span></p>
+            <p><span class="name">{{ item.aut_name}}</span></p>
+            <p>{{  item.content}}</p>
+            <p><span class="time">{{ item.pubdate| relTime}}</span></p>
           </div>
         </div>
       </van-list>
@@ -76,13 +77,39 @@ export default {
         // 作为评论的评论的加载依据
         offset: null,
         // 加载评论的评论的加载数据
-        list: []
+        list: [],
+        commentID: null // 用来存放评论id 用这个id来去查 这个评论的评论
       }
     }
   },
   methods: {
-    openReply () {
+    openReply (commentId) {
       this.showReply = true
+      //   评论的的评论的id
+      this.reply.commentId = commentId
+      this.reply.list = []
+      this.reply.offset = null
+      this.reply.finished = false
+      this.getReply()
+    },
+    async   getReply () {
+      const res = await getComments({
+        type: 'c',
+        source: this.reply.commentId,
+        offset: this.reply.offset
+      })
+      //   console.log(res)
+
+      this.reply.list.push(...res.results)
+      //   开启加载状态
+      this.reply.finished = false
+      //   判断这一页的id 是是不是等于 这组评论的id 是不是相等 相等则关闭加载的状态 不等则开启
+      this.reply.finished = res.last_id === res.end_id
+      //   如果不等的话
+      if (!this.reply.finished) {
+        //   把本页的最后一个id 作为参数传入
+        this.reply.offset = res.last_id
+      }
     },
     async onLoad () {
     //   滚动条 距离底部超过一定距离就会触发

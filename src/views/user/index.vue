@@ -55,11 +55,14 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['delUser']),
+    ...mapMutations(['delUser', 'updatePhoto']),
     async getUserInfo () {
       const res = await getUser()
       this.userInfo = res
-      console.log(res)
+      // console.log(res)
+      this.updatePhoto({
+        photo: this.userInfo.photo
+      })
     },
     async lgout () {
       //  清楚token

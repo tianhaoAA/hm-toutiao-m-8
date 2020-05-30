@@ -53,6 +53,7 @@
 <script>
 import dayjs from 'dayjs'
 import { getUserInfo, upadtePhoto, saveUserInfo } from '@/api/user'
+import { mapMutations } from 'vuex'
 export default {
   data () {
     return {
@@ -84,6 +85,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['updatePhoto']),
     // 保存用户信息
     async saveUser () {
       try {
@@ -99,6 +101,10 @@ export default {
       data.append('photo', this.$refs.myfile.files[0])
       const res = await upadtePhoto(data)
       this.user.photo = res.photo
+      // 修改成功之后 应该把vuex中的photo 更新
+      this.updatePhoto({
+        photo: res.photo
+      })
       this.showPhoto = false
     },
     opMyFile () {

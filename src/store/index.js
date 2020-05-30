@@ -17,7 +17,8 @@ export default new Vuex.Store({
     // 专门放置需要共享的状态
     // user 就是我们token信息对象
     // 设置持久化 不能设置为null
-    user: auth.getUser()
+    user: auth.getUser(),
+    photo: null
   },
   // 要修改 token 只能通过 mutations
   mutations: {
@@ -31,6 +32,10 @@ export default new Vuex.Store({
     delUser (state) {
       state.user = {}
       auth.delUser()
+    },
+    // 更新头像
+    updatePhoto (state, payload) {
+      state.photo = payload.photo
     }
   },
   actions: {

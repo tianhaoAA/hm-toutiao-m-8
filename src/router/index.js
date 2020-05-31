@@ -24,9 +24,12 @@ const routes = [
     component: Layout,
     children: [{
       // 如果path 什么都不写 默认就是二级路由的默认组件
-
       path: '',
-      component: home
+      component: home,
+      // meta 中可以放置 当前路由的信息 根据信息来进行相关的判断
+      meta: {
+        isAlive: true
+      }
     }, {
 
       path: '/question',

@@ -5,7 +5,10 @@
     <!-- 二级路由容器 -->
     <!-- 判断当前的地址 如果是/user 给一个noTop class -->
     <div class="my-wrapper" :class="{ noTop :$route.path ==='/user' }">
-      <router-view></router-view>
+     <!-- 缓存二级理由容器 -->
+    <keep-alive>
+        <router-view></router-view>
+    </keep-alive>
     </div>
     <!-- 加上 route 表示开启路由模式 -->
     <van-tabbar route>

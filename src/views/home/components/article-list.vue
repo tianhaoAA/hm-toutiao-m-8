@@ -2,7 +2,7 @@
   <!-- 文章列表组件 放置列表 -->
   <!-- van-list 可以帮助我们 实现上拉加载 需要一些变量 -->
   <!-- 需要做阅读记忆 -->
-  <div class="scroll-wrapper">
+  <div class="scroll-wrapper" @scroll="remember" ref="myScroll">
     <van-pull-refresh @refresh="onRefresh" v-model="downLoading" :success-text="successText">
       <van-list v-model="upLoading" finished-text="没有更多数据了" :finished="finished" @load="onLiad">
         <!-- 循环内容 -->
@@ -55,6 +55,8 @@ export default {
   },
   data () {
     return {
+      // 记录当前滚动的位置
+      scrollTop: 0,
       // 表示是否开启上拉加载 默认为false
       upLoading: false,
       //   表示数据是否完成所有的加载 默认为false
@@ -69,6 +71,14 @@ export default {
     }
   },
   methods: {
+    // 记录滚动的事件
+    remember (event) {
+      // 防抖
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.scrollTop = event.target.scrollTop
+      }, 500)
+    },
     async onLiad () {
       // console.log('开始加载')
       //   setTimeout(() => {
@@ -160,6 +170,27 @@ export default {
         }
       }
     })
+    eventBus.$on('changTab', (id) => {
+      // 此时得不到 this,$ref.myscroll
+      if (id === this.channel_id) {
+        this.$nextTick(() => {
+          // 因为tab 页切换事件 执行之后 article 组渲染 是异步的 没有办法 立刻得出渲染结果
+          // vue 是异步渲染 ，如果想得到上一次执行结果 可以在$nexTick中执行
+          if (this.scrollTop && this.$refs.myScroll) {
+          // 当滚动距离不为0 并且滚动元素 存在的前提下才去滚动
+            this.$refs.myScroll.scrollTop = this.scrollTop
+          }
+        })
+      }
+    })
+  },
+  activated () {
+    if (this.$refs.myScroll && this.scrollTop) {
+      // 判断滚动1位置是否大于0
+      // 将div 滚动回原来的位置
+      // 把记录的位置滚动原来的位置
+      this.$refs.myScroll.scrollTop = this.scrollTop
+    }
   }
 }
 </script>

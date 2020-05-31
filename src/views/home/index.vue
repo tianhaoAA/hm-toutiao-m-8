@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- 放置tabs组件 -->
-<van-tabs v-model="activeIndex">
+<van-tabs v-model="activeIndex" swipeable @change='changTab'>
   <!-- 内部需要放置 标签 title是当期显示的内容 -->
  <van-tab  v-for="item in channels" :key="item.id" :title="item.name">
 <div class="scroll-wrapper">
@@ -55,6 +55,12 @@ export default {
 
   },
   methods: {
+    // 切换页签时触发
+    changTab () {
+      // 切换页签 广播消息 对应的标签滚动滚动条
+      // 传出参数
+      eventBus.$emit('changTab', this.channels[this.activeIndex].id)
+    },
     // 添加频道的方法
     async addChannels (channels) {
       // alert(1)
